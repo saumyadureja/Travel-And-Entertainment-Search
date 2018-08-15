@@ -1,0 +1,2131 @@
+<html>
+<head>
+  <meta charset="utf-8">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/Cookies.js/0.4.0/cookies.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7bWom77xCgyjEAJh0aM2QKWkCp5lgSBw&libraries=places"></script>
+  <style>
+
+  #list
+{
+    width: 100%;
+    overflow: hidden;/* 30px */
+    -webkit-column-count: 4;
+    -webkit-column-fill: auto;
+    -moz-column-count: 4;
+    -moz-column-fill: auto;
+    column-count: 4;
+    column-fill: auto;
+}
+    .item
+    {
+        margin-bottom: 1.875em; /* 15px 30px */
+        -webkit-column-break-inside: avoid;
+        -moz-column-break-inside: avoid;
+        column-break-inside: avoid;
+    }
+
+@media only screen and ( max-width: 40em ) /* 640px */
+{
+    #list
+    {
+        -webkit-column-count: 1;
+        -webkit-column-gap: 0.938em; /* 15px */
+        -moz-column-count: 1;
+        -moz-column-gap: 0.938em; /* 15px */
+        column-count: 1;
+        column-gap: 0.938em; /* 15px */
+    }
+        .item
+        {
+            margin-bottom: 0.938em; /* 15px */
+        }
+}
+@media only screen and ( max-width: 20em ) /* 320px */
+{
+    #list
+    {
+        -webkit-column-count: auto;
+        -moz-column-count: auto;
+        column-count: auto;
+    }
+}
+
+  .form-actions {
+      margin: 0;
+    /*  background-color: transparent;*/
+      text-align: center;
+  }
+  .validation{
+
+    color:#F00;
+  }
+ .validation1{
+
+    color:#F00;
+  }
+
+.red{
+
+
+  color: #F00;
+}
+#map {
+   width: 100%;
+   height: 300px;
+   background-color: grey;
+ }
+
+
+</style>
+</head>
+
+<body>
+  <div class="container">
+
+
+    <div class="card bg-light text-dark">
+      <h3 id="title" style="text-align:center">Travel and Entertainment Search</h3>
+
+  	<form class=" form1" novalidate id="myform" method="GET"  action="/" >
+
+
+  		<div class="form-group row" >
+  			<label class="col-sm-2 col-form-label required"  for="keyw" >Keyword<span style="color:red;">*</span></label>
+  			<div class="col-sm-6">
+  			<input type="text" class="form-control" name="keyw" id="keyw" >
+        <div class="keyword_class" id="keyword_id"></div>
+  		</div>
+  	     </div>
+  	     <div class="form-group row">
+  			<label class="col-sm-2">Category</label>
+  			<div class="col-sm-3">
+  			<select class="form-control" name="category" id="category">
+  				<option selected>Default</option>
+  				<option >Airport</option>
+  				<option >Amusement Park</option>
+  				<option >Aquarium</option>
+  				<option >Art Gallery</option>
+  				<option >Bakery</option>
+  				<option >Bar</option>
+  				<option >Beauty Salon</option>
+  				<option >Bowling Alley</option>
+  				<option >Bus Station</option>
+  				<option >Cafe</option>
+  				<option >Campground</option>
+  				<option >Car Rental</option>
+  				<option >Casino</option>
+  				<option >Lodging</option>
+  				<option >Airport</option>
+  				<option >Movie Theater</option>
+  				<option >Museum</option>
+  				<option >Night Club</option>
+  				<option >Park</option>
+  				<option >Parking</option>
+  				<option >Restaurant</option>
+  				<option >Shopping Mall</option>
+  				<option >Stadium</option>
+  				<option >Subway Station</option>
+  				<option >Taxi Stand</option>
+  				<option >Train Station</option>
+  				<option >Transit Station</option>
+  				<option >Travel Agency</option>
+  				<option >Zoo</option>
+
+  			</select>
+  		</div>
+  	     </div>
+  	     <div class="form-group row">
+  			<label class="col-sm-2">Distance(miles)</label>
+  			<div class="col-sm-3">
+  			<input type="text" class="form-control" name="dist" id="d1" placeholder="10" value="10">
+  	     </div>
+  	 </div>
+     <fieldset class="form-group">
+    <div class="row">
+    <legend class="col-form-label col-sm-2 pt-0 required">From<span style="color:red;">*</span></legend>
+    <div class="col-sm-6">
+    <div class="form-check">
+       <input type="radio" class="form-check-input" name="radio1" id="r1" value="CurrentLocation" onclick="selectedLocation()" checked >
+       <label class="form-check-label" for="gridradio1">
+      Current Location
+     </label>
+   </div>
+   <div class="form-check">
+     <input type="radio" class="form-check-input" name="radio1" id="r2" value="SpecifiedLocation" onclick="selectedLocation()">
+     <label class="form-check-label" for="gridradio2">
+    Other.Please Specify
+     </label>
+   </div>
+   <div class="form-check disabled">
+          <input type="text" class="form-control" name="loc1" id="loc2" placeholder="Enter a Location" disabled>
+          <label class="form-check-label" for="location">
+          </label>
+          <div class="location_id" id="location_id">
+          </div>
+        </div>
+ </div>
+</div>
+</fieldset>
+
+<div class="form-group row">
+<div class="col-sm-10">
+  <button type="submit" class="btn btn-primary" id="submit" disabled><i class="fa fa-search"></i>Search</button>
+   <button type="Reset" class="btn btn-outline-default" onclick="clearFunction()">Clear</button>
+
+   </div>
+</div>
+</div>
+
+
+  	 </form>
+   </div>
+
+
+     <div class="form-actions" style="margin-top:5">
+         <button type="button" class ="btn btn-primary" center-block id="res" onclick='getResultTable()'>Results</button>
+         <button type="button" class="btn center-block" id="fav" onclick='displayFavTable()'style="color:blue;background-color:white">Favorites</button>
+     </div>
+
+     <div class="alert alert-warning" id="no_records" role="alert" style="display:none" >
+         No records
+      </div>
+      <div class="alert alert-danger" id="invalid_records" role="alert" style="display:none" >
+          INVALID REQUEST
+       </div>
+     <div class=" table-responsive">
+     <table id="favoritesTable"></table>
+   </div>
+     </div>
+
+
+          <div  id="place_name" style="text-align: center; font-weight:bold; margin-top:5px"></div>
+          <div class="progress" id="progressBar" style=" display:none; width:80% ; margin-top:1em; margin-left:12em;">
+       <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%"></div>
+     </div>
+
+          <div id="details_button" class="d-flex justify-content-end">
+          <button type="button" id="detailsButton" class="btn btn-outline-default" onclick="fetchDetails()" style="display:none" disabled>Details <i class='fa fa-angle-right'></i></button>
+          </div>
+          <div id="buttonDetails" class="d-flex justify-content-end">
+          <button type="button" id="details_but" class="btn btn-outline-default" onclick="fetch_Details()" style="display:none" disabled>Details <i class='fa fa-angle-right'></i></button>
+          </div>
+          <div class=" table">
+              <table class="table table-hover" id="displaytable" ></table>
+
+          </div>
+          <div class="next-prev" style=" margin=0;text-align:center;">
+            <button type="button" id="next_button" class="btn btn-outline-default" onclick="nextPage()" style="display:none">Next</button>
+            <button type="button"  id="prev_button" class="btn btn-outline-default" onclick="previousPage()" style="display:none">Prev</button>
+
+          </div>
+
+          <div id="list_button" style="display:none">
+          <button type="button" class="btn btn-outline-default" onclick='displayMainTable()'><i class='fa fa-angle-left'></i> List</button>
+          </div>
+          <div id="fav_button" style="display:none">
+          <button type="button" class="btn btn-outline-default" onclick=""><i class='fa fa-star-o'></i></button>
+          </div>
+          <div id="tweet_button" style="display:none">
+          <button type="button" id="twitterButton" class="btn" style="padding:0" disabled onclick='twitterFunction()'><img src="http://cs-server.usc.edu:45678/hw/hw8/images/Twitter.png" width='40px' height='35px'></img></button>
+          </div>
+
+
+          <div class="info-tabs" id="infotabs" style="display:none">
+           <ul class="nav nav-tabs" style="display:flex;flex-direction: row-reverse">
+           <li class="nav-item">
+           <a class="nav-link " data-toggle="tab" href="#reviews">Reviews</a>
+           </li>
+           <li class="nav-item">
+           <a class="nav-link" data-toggle="tab" href="#maps">Maps</a>
+           </li>
+           <li class="nav-item">
+           <a class="nav-link"  data-toggle="tab" href="#photos">Photos</a>
+           </li>
+           <li class="nav-item">
+           <a class="nav-link active" data-toggle="tab" href="#info">Info</a>
+           </li>
+           </ul>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="info" class="container tab-pane active"><br>
+      <div class="info-table">
+      <table class="table table-striped" id="infotable"></table>
+
+
+
+    </div>
+  </div>
+    <div id="photos" class="container tab-pane fade"><br>
+          <div id="wrapper">
+            <div id="list">
+            </div>
+          </div>
+          <br><br>
+          <div class="alert alert-warning" id="no_photos" role="alert" style="display:none" >
+              No records
+           </div>
+
+
+
+      </div>
+    <div id="maps" class="container tab-pane fade"><br>
+      <div class="map-form" id="map_id">
+    <form>
+      <div class="row">
+      <div class="form-group">
+      <label for="fromLoc">From</label>
+      <input type="text" class="form-control" id="from_location" placeholder="" value="Your Location">
+      </div>
+      <div class="form-group">
+       <label for="toLoc">To</label>
+       <input type="text" class="form-control" id="to_location" style="font-weight:bold" readonly>
+      </div>
+       <div class="form-group">
+       <label for="travelModes">Travel Mode</label>
+        <select class="form-control" id="travel_mode">
+       <option value="DRIVING" selected>Driving</option>
+       <option value="BICYCLING">Bicycling</option>
+       <option value="TRANSIT">Transit</option>
+       <option value="WALKING">Walking</option>
+       </select>
+       <div class="form-group">
+       <button type="button" class ="btn btn-primary" id="res" onclick='getFromLocation()'>Get Directions</button>
+       </div>
+
+
+
+  </div>
+    </form>
+    </div>
+    <div id="map_button">
+        <button type="button" class="'btn" onclick='mapToggle()'><img id="toggle_image" src="http://cs-server.usc.edu:45678/hw/hw8/images/Pegman.png" width='45px' height='35px'></img></button>
+      </div>
+      <br>
+      <div id="map"></div>
+      <div id="street-view"></div>
+      <div id="panel"></div>
+    </div>
+
+    </div>
+
+
+    <div id="reviews" class="container tab-pane fade"><br>
+
+
+     <div id="dropdownClass">
+       <div class="row">
+     <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Google Reviews
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <button class="dropdown-item" onclick='googleReviewFunction()'>Google Reviews</button>
+    <button class="dropdown-item" onclick='yelpReviewFunction()'>Yelp Reviews</button>
+    </div>
+</div>
+ <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Default Order
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+    <button class="dropdown-item" onclick="defaultOrderFunction()">Default Order</button>
+    <button class="dropdown-item" onclick="highestRatingFunction()">Highest Rating</button>
+    <button class="dropdown-item" onclick="lowestRatingFunction()">Lowest Rating</button>
+    <button class="dropdown-item" onclick="mostRecentFunction()">Most Recent</button>
+    <button class="dropdown-item" onclick="leastRecentFunction()">Least Recent</button>
+  </div>
+  </div>
+</div>
+</div>
+<div class="alert alert-warning" id="no_reviews" role="alert" style="display:none" >
+    No records
+ </div>
+      <div id="reviewtable" ></div>
+
+    </div>
+    </div>
+  </div>
+</div>
+
+ <div class="details" id="place_details"></div>
+ <div class="modal fade" id="hoursModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="hoursModalTitle">Open Hours</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <table class="modal-body table" id="timeTable">
+
+       </table>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+       </div>
+     </div>
+   </div>
+ </div>
+
+<script type="text/javascript">
+ var token;
+$(document).ready(function () {
+
+  $('#keyw').focusout(function() {
+
+
+     var x=$('#keyw').val();
+     var y=x.trim();
+      if(y=='')
+      {
+          $('#keyword_id').text("Please enter a keyword");
+          $('#keyw').css('border-color','red');
+          $('#keyword_id').css({"color":"red"});
+          $('#keyword_id').css('display','block');
+        //  $('#submit').prop('disabled',true);
+      }
+});
+
+
+
+  $('#keyw').keypress(function() {
+          var x=$('#keyw').val();
+          var y=x.trim();
+           if(y!='')
+           {
+            $('#submit').prop('disabled', false);
+            $('#keyw').css('border-color','');
+            $('#keyword_id').css('display','none');
+        //    $('#keyword_id').css({"color":"red"});
+         }
+      });
+
+
+//if($('#r2').attr("checked")==true)
+//{
+
+      $('#loc2').focusout(function() {
+
+
+         var x=$('#loc2').val();
+         var y=x.trim()
+          if(y=='')
+          {
+              $('#location_id').text("Please enter a location");
+              $('#loc2').css('border-color','red');
+              $('#location_id').css({"color":"red"});
+              $('#location_id').css('display','block');
+              $('#submit').prop('disabled', true);
+          }
+      });
+
+
+
+      $('#loc2').keypress(function() {
+        var x=$('#loc2').val();
+        var y=x.trim();
+         if(y!='') {
+                $('#submit').prop('disabled', false);
+                $('#loc2').css('border-color','');
+                $('#location_id').css('display','none');
+
+             }
+          });
+//  }
+
+
+
+
+});
+//var details_flag;
+function fetchDetails()
+{
+   document.getElementById("infotabs").style.display="block";
+   document.getElementById("displaytable").style.display="none";
+    document.getElementById("list_button").style.display="block";
+     document.getElementById("tweet_button").style.display="block";
+      document.getElementById("fav_button").style.display="block";
+       document.getElementById("next_button").style.display="none";
+        document.getElementById("details_but").style.display="none";
+         document.getElementById("details_button").style.display="none";
+   list_flag=0;
+
+
+}
+function fetch_Details()
+{
+   document.getElementById("favoritesTable").style.display="none";
+    document.getElementById("infotabs").style.display="block";
+    document.getElementById("list_button").style.display="block";
+     document.getElementById("tweet_button").style.display="block";
+      document.getElementById("fav_button").style.display="block";
+       document.getElementById("next_button").style.display="none";
+        document.getElementById("details_but").style.display="none";
+         document.getElementById("details_button").style.display="none";
+   list_flag=1;
+
+
+}
+function displayMainTable()
+{
+
+      if(list_flag==0)
+      {
+        document.getElementById("displaytable").style.display="block";
+        document.getElementById("detailsButton").style.display="block";
+         document.getElementById("detailsButton").disabled=false;
+         document.getElementById("next_button").style.display="block";
+      }
+      else if (list_flag==1)
+      {
+
+            document.getElementById("favoritesTable").style.display="block";
+            document.getElementById("details_but").style.display="block";
+
+      }
+
+
+       document.getElementById("infotabs").style.display="none";
+    document.getElementById("tweet_button").style.display="none";
+    document.getElementById("list_button").style.display="none";
+    document.getElementById("fav_button").style.display="none";
+    document.getElementById("place_name").style.display="none";
+
+}
+
+
+
+function clearFunction()
+{
+    document.getElementById("displaytable").style.display="none";
+    document.getElementById("infotabs").style.display="none";
+    document.getElementById("prev_button").style.display="none";
+     document.getElementById("next_button").style.display="none";
+     document.getElementById("tweet_button").style.display="none";
+     document.getElementById("list_button").style.display="none";
+     document.getElementById("fav_button").style.display="none";
+     document.getElementById("place_name").style.display="none";
+     document.getElementById("favoritesTable").style.display="none";
+     document.getElementById("no_records").style.display="none";
+     document.getElementById("detailsButton").style.display="none";
+     document.getElementById("details_but").style.display="none";
+}
+function getResultTable()
+{
+  document.getElementById("displaytable").style.display="block";
+  document.getElementById("infotabs").style.display="none";
+  document.getElementById("detailsButton").style.display="block";
+  document.getElementById("details_but").style.display="none";
+   document.getElementById("next_button").style.display="block";
+   document.getElementById("tweet_button").style.display="none";
+   document.getElementById("list_button").style.display="none";
+   document.getElementById("place_name").style.display="none";
+   document.getElementById("favoritesTable").style.display="none";
+   document.getElementById("no_records").style.display="none";
+
+
+
+
+}
+var flag="google";
+function googleReviewFunction()
+  {
+    document.getElementById("dropdownMenuButton").innerHTML="Yelp Reviews";
+    // document.getElementById("yelpreviewtable").style.display="none";
+       document.getElementById("reviewtable").innerHTML=" ";
+          flag="google";
+          if(document.getElementById("dropdownMenuButton2").innerHTML=="Most Recent")
+                 mostRecentFunction();
+          else if(document.getElementById("dropdownMenuButton2").innerHTML=="Least Recent")
+                leastRecentFunction();
+           else if(document.getElementById("dropdownMenuButton2").innerHTML=="Lowest Rating")
+                 lowestRatingFunction();
+           else if(document.getElementById("dropdownMenuButton2").innerHTML=="Highest Rating")
+                 highestRatingFunction();
+           else {
+                  defaultOrderFunction();
+           }
+
+
+         //displayReviews(global_place);
+      document.getElementById("dropdownMenuButton").innerHTML="Google Reviews";
+
+  }
+var yelp_reviews;
+  function yelpReviewFunction()
+    {
+
+          document.getElementById("dropdownMenuButton").innerHTML="Yelp Reviews";
+
+              if(yelpReviewsObject==false)
+                {
+                    document.getElementById("no_reviews").style.display="block";
+
+                 }
+
+
+             if(yelpReviewsObject!=false)
+           {
+
+             document.getElementById("reviewtable").innerHTML=" ";
+             flag="yelp";
+             yelp_reviews=yelpReviewsObject.reviews;
+
+        if(document.getElementById("dropdownMenuButton2").innerHTML=="Most Recent")
+               mostRecentFunction();
+        else if(document.getElementById("dropdownMenuButton2").innerHTML=="Least Recent")
+              leastRecentFunction();
+         else if(document.getElementById("dropdownMenuButton2").innerHTML=="Lowest Rating")
+               lowestRatingFunction();
+         else if(document.getElementById("dropdownMenuButton2").innerHTML=="Highest Rating")
+               highestRatingFunction();
+         else {
+                defaultOrderFunction();
+              }
+
+      }
+
+          //displayYelpReviews(yelp_reviews);
+    //    document.getElementById("yelpreviewtable").style.display="block";
+
+
+
+
+
+
+    }
+
+    function defaultOrderFunction()
+      {
+
+
+           var objectReviews;
+          if (flag=="google")
+              {
+                objectReviews=global_place.reviews;
+               displayOrderedReviews(objectReviews);
+              }
+         else if(flag=="yelp")
+         {
+           objectReviews=yelpReviewsObject.reviews;
+          displayYelpReviews(objectReviews);
+          }
+          document.getElementById("dropdownMenuButton2").innerHTML="Default Order";
+      }
+
+      function mostRecentFunction()
+        {
+            var objectReviews;
+            if(flag=="google")
+           {
+             objectReviews=global_place.reviews;
+            objectReviews.sort(function(a, b){return b.time - a.time});
+            displayOrderedReviews(objectReviews);
+          }
+          else if (flag=="yelp")
+          {
+              objectReviews=yelpReviewsObject.reviews;
+              objectReviews.sort(function(a, b){return new Date(b.time_created) - new Date(a.time_created)});
+              //  console.log(objectReviews);
+                displayYelpReviews(objectReviews);
+            //  displayOrderedReviews(objReviews);
+          }
+
+
+          // console.log(objReviews);
+            document.getElementById("dropdownMenuButton2").innerHTML="Most Recent";
+
+        }
+        function leastRecentFunction()
+          {
+            var objectReviews;
+            if(flag=="google")
+           {
+             objectReviews=global_place.reviews;
+            objectReviews.sort(function(a, b){return a.time -b.time});
+            displayOrderedReviews(objectReviews);
+          }
+          else if (flag=="yelp")
+          {
+              objectReviews=yelpReviewsObject.reviews;
+              objectReviews.sort(function(a, b){return new Date(a.time_created) - new Date(b.time_created)});
+                displayYelpReviews(objectReviews);
+            //  displayOrderedReviews(objReviews);
+          }
+              document.getElementById("dropdownMenuButton2").innerHTML="Least Recent";
+
+          }
+
+          function highestRatingFunction()
+            {
+
+              var objectReviews;
+              if(flag=="google")
+             {
+               objectReviews=global_place.reviews;
+              objectReviews.sort(function(a, b){return b.rating - a.rating});
+              displayOrderedReviews(objectReviews);
+            }
+            else if (flag=="yelp")
+            {
+                objectReviews=yelpReviewsObject.reviews;
+                objectReviews.sort(function(a, b){return b.rating - a.rating});
+                  displayYelpReviews(objectReviews);
+              //  displayOrderedReviews(objReviews);
+            }
+              document.getElementById("dropdownMenuButton2").innerHTML="Highest Rating";
+
+            }
+            function lowestRatingFunction()
+            {
+                          var objectReviews;
+                            if(flag=="google")
+                           {
+                             objectReviews=global_place.reviews;
+                            objectReviews.sort(function(a, b){return a.rating - b.rating});
+                            displayOrderedReviews(objectReviews);
+                          }
+                          else if (flag=="yelp")
+                          {
+                              objectReviews=yelpReviewsObject.reviews;
+                              objectReviews.sort(function(a, b){return a.rating - b.rating});
+                                displayYelpReviews(objectReviews);
+                            //  displayOrderedReviews(objReviews);
+                          }
+
+                  document.getElementById("dropdownMenuButton2").innerHTML="Lowest Rating";
+
+              }
+
+   function selectedLocation()
+     {
+       if(document.forms[0].radio1[0].checked==true)
+
+        {
+          document.getElementById("loc2").disabled=true;
+          document.getElementById("loc2").value="";
+          document.getElementById("location_id").style.display="none";
+          document.getElementById("loc2").style.borderColor="";
+        }
+        if(document.forms[0].radio1[1].checked==true)
+          {
+            document.getElementById("loc2").disabled=false;
+
+              var autocomplete= new google.maps.places.Autocomplete(document.getElementById("loc2"));
+          }
+      }
+
+      var latitude;
+      var longitude;
+      var lat1;
+      var lon1;
+      var lat2;
+      var lon2;
+
+            //alert("work");
+
+window.onload=function()
+{
+
+
+
+  $.ajax({
+
+   'url':"http://ip-api.com/json",
+   'method':"GET",
+
+
+    'success': function(json){
+     //console.log(data);
+
+
+
+
+
+        lat1= json["lat"];
+      //  console.log(lat1);
+        lon1= json["lon"];
+      //  console.log(lon1);
+    }
+
+
+  });
+
+}
+
+
+
+
+
+
+
+
+  $('form.form1').on('submit',function(){
+
+
+          $('#progressBar').show();
+    //  document.getElementById("progressBar").style.display="block";
+      //document.getElementById("bar").style.display="block";
+           var keyword=document.getElementById("keyw").value;
+           //console.log(keyword);
+           var category=document.getElementById("category").value;
+           var distance=document.getElementById("d1").value;
+           var given_location=document.getElementById("loc2").value;
+
+            if(document.forms[0].radio1[1].checked==true)
+            {
+                 getLocation(keyword,category,distance,given_location);
+
+            }
+
+            else if(document.forms[0].radio1[0].checked==true)
+           {
+            latitude=lat1;
+            longitude=lon1;
+            send_data(keyword,category,distance,latitude,longitude);
+          }
+
+
+         document.getElementById("infotabs").style.display="none";
+      //   document.getElementByClassName("progress-bar").style.display="block";
+       document.getElementById("detailsButton").style.display="block";
+      document.getElementById("displaytable").style.display="block";
+         document.getElementById("place_name").style.display="none";
+
+
+         return false;
+});
+
+function getLocation(keyword,category,distance,given_location)
+{
+$.ajax({
+
+
+ 'url':"http://Csci571hw8-env.pwnfegmzkc.us-east-2.elasticbeanstalk.com/current",
+ 'method':"GET",
+
+ 'data':{"givenLocation":given_location},
+
+  'success': function(data){
+   //console.log(data);
+   var body=JSON.parse(data);
+
+   lat2=body.results[0].geometry.location.lat;
+ //  console.log(lat2);
+   lon2=body.results[0].geometry.location.lng;
+ //  console.log(lon2);
+ send_data(keyword,category,distance,lat2,lon2);
+  }
+
+
+});
+
+//  latitude=lat2;
+//  longitude=lon2;
+
+}
+var paginationArray;
+var index;
+var pageCount;
+function send_data(keyword,category,distance,latitude,longitude)
+{
+     var form_data={
+            "field1": keyword,
+            "field2": category,
+            "field3": distance,
+            "field4": latitude,
+            "field5": longitude
+          };
+
+paginationArray=[];
+index=0;
+//console.log(form_data)
+$.ajax({
+
+
+  'url':'http://Csci571hw8-env.pwnfegmzkc.us-east-2.elasticbeanstalk.com/search',
+  'method':"GET",
+ 'data':form_data,
+
+
+   'success': function(data){
+
+      // console.log(data);
+       var obj=JSON.parse(data);
+       paginationArray[index]=obj;
+      pageCount=paginationArray.length;
+
+         //console.log(pageCount);
+
+       if(obj.next_page_token)
+          {
+             document.getElementById("next_button").style.display="block";
+           token=obj.next_page_token;
+         }
+          displayTable(obj,0);
+       //nextPage(token);
+
+     //alert(data);
+   }
+
+
+});
+
+}
+
+function nextPage()// on click of next
+{
+
+      $.ajax({
+
+
+    'url':'http://Csci571hw8-env.pwnfegmzkc.us-east-2.elasticbeanstalk.com/next',
+    'method':"GET",
+   'data':{"nextPageToken":token},
+
+
+     'success': function(data){
+          // console.log(data);
+           //console.log("blah");
+           var obj=JSON.parse(data);
+           if(obj.next_page_token)
+              {
+                 document.getElementById("next_button").style.display="block";
+                 token=obj.next_page_token;
+              }
+             else
+               {
+                 document.getElementById("next_button").style.display="none";
+                   displayTable(obj,0);
+               }
+              //  console.log(index);
+              if(index<paginationArray.length)
+                    {
+                      paginationArray[++index]=obj;
+                    //  console.log(paginationArray);
+                      displayTable(obj,0);
+                    }
+               else {
+                      obj=paginationArray[index];
+                    //  console.log(paginationArray);
+                      displayTable(obj,0);
+               }
+             //console.log(index);
+
+
+        //console.log(data);
+            //alert(data);
+     }
+
+
+  });
+
+
+ document.getElementById("prev_button").style.display="block";
+
+
+
+
+}
+function previousPage()
+{
+
+        // console.log(index);
+         var objprev=paginationArray[--index];
+         //console.log(index);
+         token=objprev.next_page_token;
+         if(index==0)
+         {
+           document.getElementById("prev_button").style.display="none";
+         }
+         displayTable(objprev,0);
+         document.getElementById("next_button").style.display="block";
+         //console.log(objprev);
+      //   displayTable(objprev);
+        //  console.log(paginationArray)
+
+}
+
+
+function twitterFunction()
+{
+
+      var placeName=global_place.name;
+      var placeAddress=global_place.formatted_address;
+      var placeWebsite;
+      if(global_place.website)
+          placeWebsite=global_place.website;
+      else {
+          placeWebsite=global_place.url;
+      }
+      var _text = "Check Out "+placeName+" located at "+placeAddress+" Website ";
+     		var tweet_url = 'https://twitter.com/share?text=';
+     		tweet_url += encodeURIComponent(_text);
+     		tweet_url += '&url=' + encodeURIComponent(placeWebsite);
+     		window.open(tweet_url,'newWindow', "width=500,height=300");
+
+
+}
+
+
+
+var place_name;
+var result;
+function displayTable(obj,flag)
+{
+
+    result=obj.results;
+
+   var placeId;
+  //  var fav_obj;
+  var output="";
+if(obj.status=="OK" )
+{
+          if(typeof result=="undefined"&& result.length<=0)
+          {
+
+              document.getElementById("no_records").style.display="block";
+              document.getElementById("tweet_button").style.display="none";
+              document.getElementById("detailsButton").style.display="none";
+              document.getElementById("list_button").style.display="none";
+          //  document.getElementById("no_records").innerHTML="<b>No Records</b>";
+            document.getElementById("displaytable").style.display="none";
+
+          }
+
+     if(typeof result !="undefined" && result.length>0 )
+        {
+            output+="<tr>";
+            output+="<th>#</th>";
+            output+="<th>Category</th>";
+            output+="<th>Name</th>";
+            output+="<th>Address</th>";
+            output+="<th>Favorites</th>"
+            output+="<th>Details</th>"
+            output+="</tr>";
+            var count=1;
+
+         for(i=0;i<result.length;i++)
+           {
+
+             result1=result[i];
+
+             // console.log(result1);
+             var selected_latitude=result1['geometry']['location']['lat'];
+             var selected_longitude=result1['geometry']['location']['lng'];
+             output+="<tr>";
+             output+="<td>"+count+"</td>";
+             count++;
+
+
+             var key=Object.keys(result1);
+             for(j=0;j<key.length;j++)
+             {
+                prop=key[j];
+                if(prop=="icon")
+                {
+                            var x=50;
+                            output+="<td><img src='"+result1[prop]+"' width='"+x+"' height=auto ></td>";
+                }
+
+
+                 if(prop=="vicinity")
+                {
+                    output+="<td>" +result1[prop]+"</td>";
+                }
+                 if(prop=="name")
+
+                  {
+                     output+="<td>"+result1[prop]+"</td>";
+                      place_name=result1[prop];
+                  }
+                  if(prop=="place_id")
+                  {
+                    var placeId=result1[prop];
+                    //alert(placeId);
+                  }
+
+
+             }
+               //alert(placeId);
+              //var res= JSON.stringify(result1);
+             output+="<td><button type='button' id="+placeId+" class='btn btn-outline-default' onclick='addToFavorites(id)'><i class='fa fa-star-o'></i></button></td>";
+             output+="<td><button type='button' id="+placeId+" name="+place_name+" class='btn btn-outline-default' onclick='getPlaceDetails(id,"+selected_latitude+","+selected_longitude+",0)'><i class='fa fa-angle-right'></i></button></td>";
+         }
+            output+="</tr>";
+
+            $('#progressBar').hide();
+            document.getElementById("no_records").style.display="none";
+            document.getElementById("detailsButton").style.display="block";
+            document.getElementById("tweet_button").style.display="none";
+             document.getElementById("displaytable").innerHTML=output;
+               document.getElementById("list_button").style.display="none";
+             document.close();
+
+    }
+    else
+    {
+      $('#progressBar').hide();
+      document.getElementById("no_records").style.display="block";
+      document.getElementById("tweet_button").style.display="none";
+      document.getElementById("detailsButton").style.display="none";
+      document.getElementById("list_button").style.display="none";
+  //  document.getElementById("no_records").innerHTML="<b>No Records</b>";
+       document.getElementById("displaytable").style.display="none";
+        document.close();
+         }
+}
+//  else
+else
+  {         //alert("hi");
+        document.getElementById("invalid_records").style.display="block";
+  }
+//output+="</table>";
+//output+="</html>";
+
+}
+function addToFavorites(id)
+{
+
+  var favPlace;
+    var flag=0;
+//  var favArray=JSON.parse(localStorage.getItem("storage"));
+//  console.log(favArray);
+//console.log(favArray);
+
+//  console.log(request);
+var request={
+     placeId: id
+};
+  let map=new google.maps.Map(document.createElement('div'));
+
+  service = new google.maps.places.PlacesService(map);
+  service.getDetails(request,function(place, status) {
+     if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+           favPlace=place;
+           //console.log(favPlace);
+         }
+
+
+     if(typeof(localStorage['keyLocalStorage'])=="undefined")
+            {
+
+            //  alert("hi");
+                 var favArray=new Array;
+              favArray.push(favPlace);
+               //console.log(favArray);
+              localStorage.setItem("keyLocalStorage",JSON.stringify(favArray));
+            }
+            else
+
+            {
+              //alert("ji");
+              var favArray=JSON.parse(localStorage.getItem("keyLocalStorage"));
+             for(i=0;i<favArray.length;i++)
+             {
+                    if (favArray[i].place_id==id)
+                        {
+                          flag=1;
+                        }
+            }
+              if(flag==1)
+              {
+                  localStorage.setItem("keyLocalStorage",JSON.stringify(favArray));
+                  console.log(favArray);
+                  // displayFavTable();
+              }
+              else
+              {
+
+                favArray.push(favPlace);
+                console.log(favArray);
+                localStorage.setItem("keyLocalStorage",JSON.stringify(favArray));
+              //  displayFavTable();
+              }
+          }
+                //console.log(favArray)
+
+
+
+          });
+      }
+
+
+
+function displayFavTable()
+{
+    //console.log(obj);
+    document.getElementById("details_but").style.display="block";
+    var obj=JSON.parse(localStorage.getItem("keyLocalStorage"));
+    //console.log(obj);
+   var placeId;
+  //  var fav_obj;
+  var output="";
+
+     if(typeof obj !="undefined" && obj.length>0 )
+        {
+            output+="<tr>";
+            output+="<th>#</th>";
+            output+="<th>Category</th>";
+            output+="<th>Name</th>";
+            output+="<th>Address</th>";
+            output+="<th>Favorites</th>"
+            output+="<th>Details</th>"
+            output+="</tr>";
+            var count=1;
+
+         for(i=0;i<obj.length;i++)
+           {
+
+             result1=obj[i];
+              // console.log(result1);
+             // console.log(result1);
+             var selected_latitude=result1['geometry']['location']['lat'];
+             var selected_longitude=result1['geometry']['location']['lng'];
+             output+="<tr>";
+             output+="<td>"+count+"</td>";
+             count++;
+
+
+             var key=Object.keys(result1);
+             for(j=0;j<key.length;j++)
+             {
+                prop=key[j];
+                if(prop=="icon")
+                {
+                            var x=50;
+                            output+="<td><img src='"+result1[prop]+"' width='"+x+"' height=auto ></td>";
+                }
+
+
+                 if(prop=="vicinity")
+                {
+                    output+="<td>" +result1[prop]+"</td>";
+                }
+                 if(prop=="name")
+
+                  {
+                     output+="<td>"+result1[prop]+"</td>";
+                      place_name=result1[prop];
+                  }
+                  if(prop=="place_id")
+                  {
+                    var placeId=result1[prop];
+                    //alert(placeId);
+                  }
+
+
+             }
+               //alert(placeId);
+              //var res= JSON.stringify(result1);
+             output+="<td><button type='button' id="+placeId+" class='btn btn-outline-default'onclick='deleteFavorites(id)'><i class='fa fa-trash-o'></i></button></td>";
+             output+="<td><button type='button' id="+placeId+" name="+place_name+" class='btn btn-outline-default' onclick='getPlace_Details(id,"+selected_latitude+","+selected_longitude+",1)'><i class='fa fa-angle-right'></i></button></td>";
+         }
+            output+="</tr>";
+
+          //  $('#progressBar').hide();
+            document.getElementById("no_records").style.display="none";
+            document.getElementById("detailsButton").style.display="none";
+            document.getElementById("next_button").style.display="none";
+             document.getElementById("displaytable").style.display="none";
+             document.getElementById("infotabs").style.display="none";
+             document.getElementById("favoritesTable").style.display="block";
+             document.getElementById("favoritesTable").innerHTML=output;
+             document.close();
+
+    }
+    else {
+
+      document.getElementById("no_records").style.display="block";
+      document.getElementById("detailsButton").style.display="none";
+      document.getElementById("next_button").style.display="none";
+       document.getElementById("displaytable").style.display="none";
+       document.getElementById("infotabs").style.display="none";
+       document.getElementById("favoritesTable").innerHTML=output;
+       document.close();
+    }
+
+//  else
+//output+="</table>";
+//output+="</html>";
+
+}
+function deleteFavorites(id)
+{
+     var favArray=JSON.parse(localStorage.getItem("keyLocalStorage"));
+    // console.log(favArray);
+     for(i=0;i<favArray.length;i++)
+     {
+         if(favArray[i].place_id==id)
+              {
+                favArray.splice(i,1);
+              //  console.log(favArray);
+            }
+     }
+     localStorage.setItem("keyLocalStorage",JSON.stringify(favArray));
+
+     displayFavTable();
+
+
+
+}
+
+var selected_latitude,selected_longitude,current_lat,current_lon;
+
+
+var global_place;
+var list_flag;
+function getPlaceDetails(id,selectedLatitude,selectedLongitude,flag)
+{
+    list_flag=flag;
+  //document.getElementById("detailsButton").disabled="false";
+  document.getElementById("detailsButton").disabled=false;
+  selected_latitude=selectedLatitude;
+  selected_longitude=selectedLongitude;
+
+  if(document.forms[0].radio1[0].checked==true)
+        {
+          current_lat=lat1;
+          current_lon=lon1;
+        }
+  else if(document.forms[0].radio1[1].checked==true)
+    {
+        current_lat=lat2;
+        current_lon=lon2;
+    }
+
+/*alert(current_lat);
+alert(current_lon);
+alert(selected_latitude);
+alert(selected_longitude);
+*/
+  var request={
+       placeId: id
+  };
+//  console.log(request);
+  let map=new google.maps.Map(document.createElement('div'));
+
+  service = new google.maps.places.PlacesService(map);
+  service.getDetails(request,function(place, status) {
+     if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+           global_place=place;
+      //  console.log(global_place);
+       if(place) {
+
+         //console.log(status);
+          document.getElementById("detailsButton").style.display="none";
+           displayInfoTable(place,status);
+           displayPhotos(place);
+           displayMaps(place,selected_latitude,selected_longitude);
+           displayReviews(place);
+           getYelpReviews();
+
+       }
+     }
+
+       });
+
+
+  document.getElementById("favoritesTable").style.display="none";
+    document.getElementById("displaytable").style.display="none";
+    document.getElementById("next_button").style.display="none";
+    document.getElementById("prev_button").style.display="none";
+
+    document.getElementById("infotabs").style.display="block";
+    document.getElementById("tweet_button").style.display="block";
+    document.getElementById("twitterButton").disabled=false;
+  //  document.getElementById("reviewtabs").style.display="block";
+}
+function getPlace_Details(id,selectedLatitude,selectedLongitude,flag)
+{
+    list_flag=flag;
+  //document.getElementById("detailsButton").disabled="false";
+  document.getElementById("details_but").disabled=false;
+  //  document.getElementById("details_but").style.display="block";
+  selected_latitude=selectedLatitude;
+  selected_longitude=selectedLongitude;
+
+  if(document.forms[0].radio1[0].checked==true)
+        {
+          current_lat=lat1;
+          current_lon=lon1;
+        }
+  else if(document.forms[0].radio1[1].checked==true)
+    {
+        current_lat=lat2;
+        current_lon=lon2;
+    }
+
+/*alert(current_lat);a
+alert(current_lon);
+alert(selected_latitude);
+alert(selected_longitude);
+*/
+  var request={
+       placeId: id
+  };
+//  console.log(request);
+  let map=new google.maps.Map(document.createElement('div'));
+
+  service = new google.maps.places.PlacesService(map);
+  service.getDetails(request,function(place, status) {
+     if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+           global_place=place;
+      //  console.log(global_place);
+       if(place) {
+
+         //console.log(status);
+          document.getElementById("details_but").style.display="none";
+           displayInfoTable(place,status);
+           displayPhotos(place);
+           displayMaps(place,selected_latitude,selected_longitude);
+           displayReviews(place);
+           getYelpReviews();
+
+       }
+     }
+
+       });
+
+
+  document.getElementById("favoritesTable").style.display="none";
+    document.getElementById("displaytable").style.display="none";
+    document.getElementById("next_button").style.display="none";
+    document.getElementById("prev_button").style.display="none";
+
+    document.getElementById("infotabs").style.display="block";
+    document.getElementById("tweet_button").style.display="block";
+    document.getElementById("twitterButton").disabled=false;
+  //  document.getElementById("reviewtabs").style.display="block";
+}
+var yelpReviewsObject;
+var noreview;
+function getYelpReviews()
+  {
+           var placeName=global_place.name;
+           var Formatted_address=global_place.formatted_address;
+           var addressArray=Formatted_address.split(',');
+            var arrayLength=addressArray.length;
+             var country=addressArray[arrayLength-1].substr(1,2);
+            //  console.log(country);
+             var address1=addressArray[0];//console.log(address1);
+             var stateAndCode=addressArray[arrayLength-2].split(' ');
+             var state=stateAndCode[1]; //console.log(state);
+             var city=addressArray[arrayLength-3];//console.log(city);
+             var address2=addressArray[arrayLength-3]+','+addressArray[arrayLength-2];//console.log(address2);
+
+             $.ajax({
+
+         'url':"http://Csci571hw8-env.pwnfegmzkc.us-east-2.elasticbeanstalk.com/yelp",
+         'method':"GET",
+
+         'data':{"place_name":placeName,"add1":address1,"add2":address2,"placeCity":city,"placeState":state,"placeCountry":country},
+
+          'success': function(data){
+               yelpReviewsObject=data;
+
+           //console.log(data);
+          }
+
+      });
+}
+var directionsService="";
+var directionsDisplay="";
+var panorama;
+function displayMaps(place,selected_latitude,selected_longitude)
+{
+
+    var toLoc =document.getElementById("to_location").value=place.name+','+place.formatted_address;
+    var autocomplete= new google.maps.places.Autocomplete(document.getElementById("from_location"));
+
+
+  var uluru = {lat: selected_latitude, lng: selected_longitude};
+  //console.log(uluru);
+  directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer();
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 17,
+    center: uluru,
+    streetViewControl: false
+  });
+  var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+        panorama = map.getStreetView();
+        panorama.setPosition(uluru);
+        panorama.setPov(/** @type {google.maps.StreetViewPov} */({
+          heading: 265,
+          pitch: 0
+        }));
+  directionsDisplay.setMap(map);
+
+
+//displayRoute(directionsService,directionsDisplay,current_lat,current_lon,selected_latitude,selected_longitude)
+}
+
+function getFromLocation()
+{
+
+    var given_location=document.getElementById("from_location").value;
+  var fromLat,fromLon;
+
+  var my_loc=document.getElementById("from_location").value;
+
+  if(my_loc.toLowerCase() == "your location" || my_loc.toLowerCase()=="my location")
+  {
+     displayRoute(current_lat,current_lon);
+   }
+  else
+
+  {
+     $.ajax({
+
+ 'url':"http://Csci571hw8-env.pwnfegmzkc.us-east-2.elasticbeanstalk.com/current",
+ 'method':"GET",
+
+ 'data':{"givenLocation":given_location},
+
+  'success': function(data){
+   //console.log(data);
+   var body=JSON.parse(data);
+
+   fromLat=body.results[0].geometry.location.lat;
+//console.log(fromLat);
+   fromLon=body.results[0].geometry.location.lng;
+//console.log(fromLon);
+displayRoute(fromLat,fromLon);
+
+  }
+
+    });
+}
+
+//  latitude=lat2;
+//  longitude=lon2;
+
+}
+
+function displayRoute(from_Lat,from_Lon) {
+
+  var selectedMode=document.getElementById("travel_mode").value;
+//  alert(selectedMode);
+
+    directionsService.route({
+
+        origin: {
+            lat:from_Lat,
+            lng: from_Lon
+        },
+        destination: {
+            lat: selected_latitude,
+            lng: selected_longitude
+
+        },
+        travelMode:selectedMode,
+        provideRouteAlternatives: true//  alternatives:true //google.maps.TravelMode[selectedMode]
+        }, function(response, status) {
+
+        if (status == 'OK') {
+                  //console.log(response);
+            directionsDisplay.setDirections(response);
+        } else {
+            window.alert('Directions request failed due to ' + status);
+        }
+
+    });
+
+    var geocoder = new google.maps.Geocoder();
+
+    google.maps.event.addListener(map, 'click', function(event) {
+        geocoder.geocode({
+            'latLng': event.latLng
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    alert(results[0].formatted_address);
+                }
+            }
+        });
+    });
+  directionsDisplay.setPanel(document.getElementById('panel'));
+}
+function mapToggle()
+{
+
+
+
+
+  var toggle = panorama.getVisible();
+  if (toggle == false) {
+    document.getElementById("toggle_image").src="http://cs-server.usc.edu:45678/hw/hw8/images/Map.png";
+    panorama.setVisible(true);
+  } else {
+    panorama.setVisible(false);
+    document.getElementById("toggle_image").src="http://cs-server.usc.edu:45678/hw/hw8/images/Pegman.png";
+  }
+      //  document.getElementById("map").style.display="none";
+
+
+
+
+
+}
+
+function displayPhotos(obj)
+{
+var obj_photos=obj.photos;
+var output="";
+if(typeof obj.photos!="undefined")
+{
+
+  for(i=0;i<obj.photos.length;i++)
+  {
+  //  var x1=200;
+  //  var y1=200;
+    var photo_res=obj_photos[i].getUrl({'maxWidth':1200, 'maxHeight':1200});
+     output+="<div class='item'>";
+     output+="<img id="+photo_res+" src="+photo_res+" width='100%' height='100%' class='img-responsive img-thumbnail 'onclick='photoRes(id)' />";
+     output+="</div>";
+
+
+  }
+  document.getElementById("list").innerHTML=output;
+  document.close();
+}
+else {
+
+    document.getElementById("no_photos").style.display="block";
+     }
+
+}
+
+function photoRes(url)
+{
+    window.open(url);
+
+}
+  function displayReviews(obj)
+{
+       document.getElementById("dropdownMenuButton").style.display="block";
+      var obj_reviews=obj.reviews;
+
+    //  var authorPhoto="";
+    if(typeof obj.reviews!="undefined")
+    {
+      for(i=0;i<obj_reviews.length;i++)
+         {
+
+              var reviews=obj_reviews[i];
+              var x=60;
+              var authorPhoto="<img id='"+reviews["author_url"]+"' src='"+reviews["profile_photo_url"]+"' width='"+x+"' height=auto onclick='getAuthorProfile(id)'>";
+              var authorName="<a href='"+reviews["author_url"]+ "'> "+reviews["author_name"]+"</a>";
+              var authorTime=reviews["time"];
+              var authorTimeFormat=moment.unix(authorTime).format('YYYY-MM-DD h:mm:ss');
+              var authorRating=reviews["rating"];
+              var authorText=reviews["text"];
+
+              var x=document.createElement('div');
+              x.classList.add("row");
+              x.id="div"+i;
+                 var photo_div=document.createElement('div');
+                 photo_div.classList.add("col-md-1")
+                 photo_div.id="photo_div"+i;
+               var reviewPhoto=document.createElement('div');
+                reviewPhoto.id="p"+i;
+                var text_div=document.createElement('div');
+                text_div.classList.add("col-md-11");
+                  text_div.id="text_div"+i;
+                var reviewName=document.createElement('div');
+                reviewName.id="n"+i;
+                var timeAndRating=document.createElement('div');
+              //  timeAndRating.classList.add("row");
+                timeAndRating.id="tr"+i;
+                var reviewTime=document.createElement('div');
+                //reviewTime.classList.add("col-md-4");
+                 reviewTime.id="rt"+i;
+              //  var reviewRating=document.createElement('div');
+              //  reviewRating.classList.add("col-md-8");
+              //  reviewRating.id="r"+i;
+                var reviewText=document.createElement('div');
+                reviewText.id="t"+i;
+                  document.getElementById("reviewtable").appendChild(x);
+
+
+                  document.getElementById("div"+i).style.border="1px solid black";
+                  document.getElementById("div"+i).style.marginBottom="10";
+                document.getElementById("div"+i).appendChild(photo_div);
+                document.getElementById("div"+i).appendChild(text_div);
+              //  document.getElementById("div"+i).appendChild(timeAndRating);
+            /*    document.getElementById("div"+i).appendChild(reviewName);
+                document.getElementById("div"+i).appendChild(reviewTime);
+                document.getElementById("div"+i).appendChild(reviewRating);
+                document.getElementById("div"+i).appendChild(reviewText);
+             */
+                document.getElementById("photo_div"+i).appendChild(reviewPhoto);
+                document.getElementById("text_div"+i).appendChild(reviewName);
+                document.getElementById("text_div"+i).appendChild(timeAndRating);
+              //  document.getElementById("text_div"+i).appendChild(reviewRating);
+                document.getElementById("tr"+i).appendChild(reviewTime);
+                //document.getElementById("tr"+i).appendChild(reviewRating);
+                document.getElementById("text_div"+i).appendChild(reviewText);
+
+
+                 document.getElementById("photo_div"+i).style.float="left";
+                 document.getElementById("photo_div"+i).style.paddingRight="4em";
+                //document.getElementById("text_div"+i).style.clear="both";
+              //  document.getElementById("text_div"+i).style.backgroundColor="green";
+              //  document.getElementById("photo_div"+i).style.backgroundColor="yellow";
+              //  document.getElementById("tr"+i).style.backgroundColor="red";
+
+
+              document.getElementById("p"+i).innerHTML=authorPhoto;
+              document.getElementById("n"+i).innerHTML=authorName;
+              document.getElementById("n"+i).style.color="#3498DB";
+              document.getElementById("n"+i).style.fontWeight="bold";
+              var starRating= $('#rateyo').rateYo({rating:authorRating})
+                document.getElementById("rt"+i).innerHTML="<span style='margin-right:5px'>"+starRating+"</span><span>"+authorTimeFormat+"</span>";
+          //    $('#rateyo').rateYo({
+                //   rating:starRating
+
+            //  });
+          //document.getElementById("r"+i).innerHTML=authorRating;
+              document.getElementById("t"+i).innerHTML=authorText;
+          //  document.getElementById("t"+i).innerHTML="<br>";
+
+              //styling
+
+
+      }
+
+   // alert(html_text1);
+   // document.getElementById("nam").innerhtml=html_text1;
+    // document.getElementById("reviewtable").innerHTML=html_text;
+  //  document.getElementById("displayreview").style.display="none";
+
+    document.close();
+  }
+   if(!obj_reviews)
+   {
+     document.getElementById("no_reviews").style.display="block";
+
+   }
+}
+function getAuthorProfile(url)
+  {
+
+      window.open(url);
+
+  }
+
+function displayOrderedReviews(obj_reviews)
+{
+     //document.getElementById("dropdownMenuButton").style.display="block";
+  //  var obj_reviews=obj.reviews;
+
+  //  var authorPhoto="";
+  if(typeof obj_reviews!="undefined")
+  {
+    for(i=0;i<obj_reviews.length;i++)
+       {
+
+            var reviews=obj_reviews[i];
+            var x=60;
+            var authorPhoto="<img src='"+reviews["profile_photo_url"]+"' width='"+x+"' height=auto >";
+            var authorName=reviews["author_name"];
+            var authorTime=reviews["time"];
+            var authorTimeFormat=moment.unix(authorTime).format('YYYY-MM-DD h:mm:ss');
+            var authorRating=reviews["rating"];
+            var authorText=reviews["text"];
+
+            var x=document.createElement('div');
+            x.classList.add("row");
+            x.id="div"+i;
+               var photo_div=document.createElement('div');
+               photo_div.classList.add("col-md-1")
+               photo_div.id="photo_div"+i;
+             var reviewPhoto=document.createElement('div');
+              reviewPhoto.id="p"+i;
+              var text_div=document.createElement('div');
+              text_div.classList.add("col-md-11");
+                text_div.id="text_div"+i;
+              var reviewName=document.createElement('div');
+              reviewName.id="n"+i;
+              var timeAndRating=document.createElement('div');
+            //  timeAndRating.classList.add("row");
+              timeAndRating.id="tr"+i;
+              var reviewTime=document.createElement('div');
+              //reviewTime.classList.add("col-md-4");
+               reviewTime.id="rt"+i;
+            //  var reviewRating=document.createElement('div');
+            //  reviewRating.classList.add("col-md-8");
+            //  reviewRating.id="r"+i;
+              var reviewText=document.createElement('div');
+              reviewText.id="t"+i;
+                document.getElementById("reviewtable").appendChild(x);
+
+
+                document.getElementById("div"+i).style.border="1px solid black";
+                document.getElementById("div"+i).style.marginBottom="10";
+              document.getElementById("div"+i).appendChild(photo_div);
+              document.getElementById("div"+i).appendChild(text_div);
+            //  document.getElementById("div"+i).appendChild(timeAndRating);
+          /*    document.getElementById("div"+i).appendChild(reviewName);
+              document.getElementById("div"+i).appendChild(reviewTime);
+              document.getElementById("div"+i).appendChild(reviewRating);
+              document.getElementById("div"+i).appendChild(reviewText);
+           */
+              document.getElementById("photo_div"+i).appendChild(reviewPhoto);
+              document.getElementById("text_div"+i).appendChild(reviewName);
+              document.getElementById("text_div"+i).appendChild(timeAndRating);
+            //  document.getElementById("text_div"+i).appendChild(reviewRating);
+              document.getElementById("tr"+i).appendChild(reviewTime);
+              //document.getElementById("tr"+i).appendChild(reviewRating);
+              document.getElementById("text_div"+i).appendChild(reviewText);
+
+
+               document.getElementById("photo_div"+i).style.float="left";
+               document.getElementById("photo_div"+i).style.paddingRight="4em";
+              //document.getElementById("text_div"+i).style.clear="both";
+            //  document.getElementById("text_div"+i).style.backgroundColor="green";
+            //  document.getElementById("photo_div"+i).style.backgroundColor="yellow";
+            //  document.getElementById("tr"+i).style.backgroundColor="red";
+
+
+            document.getElementById("p"+i).innerHTML=authorPhoto;
+            document.getElementById("n"+i).innerHTML=authorName;
+            document.getElementById("n"+i).style.color="#3498DB";
+            document.getElementById("n"+i).style.fontWeight="bold";
+              document.getElementById("rt"+i).innerHTML="<span style='margin-right:5px'>"+authorRating+"</span><span>"+authorTimeFormat+"</span>";
+        //    document.getElementById("r"+i).innerHTML=authorRating;
+            document.getElementById("t"+i).innerHTML=authorText;
+        //  document.getElementById("t"+i).innerHTML="<br>";
+
+            //styling
+
+
+    }
+
+ // alert(html_text1);
+ // document.getElementById("nam").innerhtml=html_text1;
+  // document.getElementById("reviewtable").innerHTML=html_text;
+//  document.getElementById("displayreview").style.display="none";
+
+  document.close();
+}
+ if(!obj_reviews)
+ {
+   document.getElementById("no_reviews").style.display="block";
+
+ }
+}
+
+function displayYelpReviews(yelp_reviews)
+{
+    // document.getElementById("reviewtable").style.display="none";
+
+  //  var authorPhoto="";
+  if(typeof yelp_reviews!="undefined")
+  {
+    for(i=0;i<yelp_reviews.length;i++)
+       {
+
+            var reviews=yelp_reviews[i];
+
+            var x=60;
+            var authorPhoto="<img id='"+reviews["url"]+"' src='"+reviews["user"]["image_url"]+"' width='"+x+"' height=auto onclick='getAuthorProfile(id)'>";
+            var authorName="<a href='"+reviews["url"]+ "'> "+reviews["user"]["name"]+"</a>";
+            var authorTimeFormat=reviews["time_created"];
+            var authorRating=reviews["rating"];
+            var authorText=reviews["text"];
+
+            var x=document.createElement('div');
+            x.classList.add("row");
+            x.id="div"+i;
+               var photo_div=document.createElement('div');
+               photo_div.classList.add("col-md-1")
+               photo_div.id="photo_div"+i;
+             var reviewPhoto=document.createElement('div');
+              reviewPhoto.id="p"+i;
+              var text_div=document.createElement('div');
+              text_div.classList.add("col-md-11");
+                text_div.id="text_div"+i;
+              var reviewName=document.createElement('div');
+              reviewName.id="n"+i;
+              var timeAndRating=document.createElement('div');
+            //  timeAndRating.classList.add("row");
+              timeAndRating.id="tr"+i;
+              var reviewTime=document.createElement('div');
+              //reviewTime.classList.add("col-md-4");
+               reviewTime.id="rt"+i;
+
+              var reviewText=document.createElement('div');
+              reviewText.id="t"+i;
+                document.getElementById("reviewtable").appendChild(x);
+
+
+                document.getElementById("div"+i).style.border="1px solid black";
+                document.getElementById("div"+i).style.marginBottom="10";
+              document.getElementById("div"+i).appendChild(photo_div);
+              document.getElementById("div"+i).appendChild(text_div);
+
+              document.getElementById("photo_div"+i).appendChild(reviewPhoto);
+              document.getElementById("text_div"+i).appendChild(reviewName);
+              document.getElementById("text_div"+i).appendChild(timeAndRating);
+            //  document.getElementById("text_div"+i).appendChild(reviewRating);
+              document.getElementById("tr"+i).appendChild(reviewTime);
+              //document.getElementById("tr"+i).appendChild(reviewRating);
+              document.getElementById("text_div"+i).appendChild(reviewText);
+
+
+               document.getElementById("photo_div"+i).style.float="left";
+               document.getElementById("photo_div"+i).style.paddingRight="4em";
+              //document.getElementById("text_div"+i).style.clear="both";
+            //  document.getElementById("text_div"+i).style.backgroundColor="green";
+            //  document.getElementById("photo_div"+i).style.backgroundColor="yellow";
+            //  document.getElementById("tr"+i).style.backgroundColor="red";
+
+
+            document.getElementById("p"+i).innerHTML=authorPhoto;
+            document.getElementById("n"+i).innerHTML=authorName;
+            document.getElementById("n"+i).style.color="#3498DB";
+            document.getElementById("n"+i).style.fontWeight="bold";
+              document.getElementById("rt"+i).innerHTML="<span style='margin-right:5px'>"+authorRating+"</span><span>"+authorTimeFormat+"</span>";
+        //    document.getElementById("r"+i).innerHTML=authorRating;
+            document.getElementById("t"+i).innerHTML=authorText;
+        //  document.getElementById("t"+i).innerHTML="<br>";
+
+            //styling
+
+
+    }
+
+ // alert(html_text1);
+ // document.getElementById("nam").innerhtml=html_text1;
+  // document.getElementById("reviewtable").innerHTML=html_text;
+//  document.getElementById("displayreview").style.display="none";
+
+  document.close();
+}
+ if(!yelp_reviews)
+ {
+   document.getElementById("no_reviews").style.display="block";
+
+}
+
+ }
+
+
+  var timeArray;
+  var currentDay;
+  var currentDayNumber;
+  var dayElement;
+var starRating;
+function displayInfoTable(place,status)//info table
+{
+var createTable="";
+   //document.getElementById("infotabs").style.display="block";
+document.getElementById("fav_button").style.display="block";
+document.getElementById("list_button").style.display="block";
+var placeName=place.name;
+  document.getElementById("place_name").innerHTML=placeName;
+   //alert(result.length);
+  var output="";
+  if (status=="OK")
+  {
+
+    if(Object.keys(place).length>0)
+        {
+
+
+            if(place.formatted_address)
+                 {
+                   output+="<tr>";
+                   output+="<td><strong>Address</strong></td>";
+                   output+= "<td>"+place.formatted_address+"</td>";
+                   output+= "</tr><br>";
+                 }
+            if(place.international_phone_number)
+                  {
+                    output+="<tr>";
+                   output+="<td><strong>Phone Number</strong></td>";
+                   output+="<td>"+place.international_phone_number+"</td><br>";
+                   output+= "</tr><br>";
+                 }
+            if(place.price_level)
+            {
+              output+="<tr>";
+             output+="<td><strong>Price Level</strong></td>";
+              var level=place.price_level;
+              var p="";
+             for(i=1;i<=level;i++){
+                    p+="$";
+             }
+             output+="<td>"+p+"</td><br>";
+             output+= "</tr><br>";
+            }
+            if(place.rating)
+            {
+
+
+                   var rating;
+                  starRating=place.rating;
+
+
+
+             output+="<tr>";
+            output+="<td><strong>Rating</strong></td>";
+            output+="<td>"
+            output+=place.rating;
+            output+="<div id=rateyo></div>";
+
+
+              output+="</td>";
+            output+= "</tr>";
+            }
+            if(place.url)
+            {
+              output+="<tr>";
+              output+="<td><strong>Google Page</strong></td>";
+              output+="<td><a href="+place.url+" target='_blank'>"+place.url+"</a></td><br>";
+              output+= "</tr><br>";
+            }
+            if(place.website)
+            {
+              output+="<tr>";
+              output+="<td><strong>Website</strong></td>";
+              output+="<td><a href="+place.website+" target='_blank'>"+place.website+"</a></td><br>";
+              output+= "</tr><br>";
+          }
+         if(place.opening_hours)
+                 {
+
+                       output+="<tr><td><strong>Hours</td>";
+                       output+="<td>"
+                       currentDay=moment.utc(moment()).utc(place.utc_offset).format("dddd");
+               currentDayNumber=moment.utc(moment()).utc(place.utc_offset).format("d");
+                    if(place.opening_hours.open_now==true)
+                           {
+
+                             output+="Open Now ";
+                              timeArray=place.opening_hours.weekday_text;
+                            // var ArrayElement=timeArray.split(',');
+                                for(k=0;k<timeArray.length;k++)
+                                {
+                                      var ArrayElement=timeArray[k].split(': ');
+                                      //console.log(ArrayElement);
+                                        if(ArrayElement[0]==currentDay)
+                                        {   dayElement=k;
+                                          //console.log(dayElement);
+                                            output+=timeArray[k]+" ";
+                                            break;
+                                        }
+                                }
+
+                            // output+=timeArray[currentDay];
+                             //output+=currentDay;
+
+                            }
+                      else if(place.opening_hours.open_now==false)
+                      {
+                        output+="Closed ";
+                        var timeArray=place.opening_hours.weekday_text;
+                       // var ArrayElement=timeArray.split(',');
+                           for(j=0;j<timeArray.length;j++)
+                           {
+                                 var ArrayElement=timeArray[j].split(': ');
+                                 //console.log(ArrayElement);
+                                   if(ArrayElement[0]==currentDay)
+                                   {
+                                     dayElement=j;
+                                     //console.log(dayElement);
+                                     output+=timeArray[j]+" ";
+                                     break;
+                                   }
+                           }
+
+                      }
+                      output+="<a href='#hoursModal' data-toggle='modal'>Daily Open Hours</a>";
+                }
+
+                        //document.getElementById("timeTable").innerHTML=createTable;
+
+
+                    }
+      }
+
+ document.getElementById("place_name").style.display="block";
+
+ document.getElementById("infotable").innerHTML=output;
+output+= $('#rateyo').rateYo({
+         rating:starRating,
+         normalFill:"transparent"
+
+    });
+    for (j=dayElement;j<7;j++)
+      {
+          console.log(j);
+        var Array_Element=timeArray[j].split(': ');
+        if(j==dayElement)
+        {
+              //debugger
+              //alert("blah");
+              createTable+="<tr>"
+              createTable+="<td><b>"+Array_Element[0]+"</b></td>";
+              createTable+="<td><b>"+Array_Element[1]+"</b></td>";
+              createTable+="</tr>"
+        }
+        else
+         {
+           createTable+="<tr>"
+           createTable+="<td>"+Array_Element[0]+"</td>";
+           createTable+="<td>"+Array_Element[1]+"</td>";
+           createTable+="</tr>"
+              // createTable+="<tr><td>"+timeArray[j]+"</tr></td>";
+        }
+
+      }
+
+      for (j=1;j<dayElement;j++)
+        {
+           //console.log(j);
+          var Array_Element=timeArray[j].split(': ');
+            createTable+="<tr>"
+            createTable+="<td>"+Array_Element[0]+"</td>";
+             createTable+="<td>"+Array_Element[1]+"</td>";
+              createTable+="</tr>"
+                 //createTable+="<tr><td>"+timeArray[j]+"</tr></td>";
+
+        }
+
+      document.getElementById("timeTable").innerHTML=createTable;
+   document.close();
+  }
+
+
+
+</script>
+
+
+
+
+
+
+
+</body>
+
+</html>

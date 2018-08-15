@@ -1,0 +1,20 @@
+{
+  "name": "nodekb",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "latest",
+    "express": "latest",
+    "https": "latest",
+    "request": "latest",
+    "yelp-fusion": "latest"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
+}
